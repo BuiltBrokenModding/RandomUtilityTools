@@ -34,7 +34,7 @@ public class ItemMultiToolGun extends Item
     private static final int[] EMPTY_INT = new int[0];
 
     @SideOnly(Side.CLIENT)
-    private HashMap<ToolAction, IIcon> textures = new HashMap();
+    private HashMap<ToolAction, IIcon> textures;
 
     public ItemMultiToolGun()
     {
@@ -416,6 +416,8 @@ public class ItemMultiToolGun extends Item
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister reg)
     {
+        textures = new HashMap();
+        
         this.itemIcon = reg.registerIcon(this.getIconString());
 
         for (ToolMode mode : ToolMode.values())
