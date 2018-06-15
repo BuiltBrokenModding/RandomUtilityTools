@@ -1,6 +1,5 @@
 package com.builtbroken.dtu.content.tool.actions;
 
-import com.builtbroken.dtu.DTUMod;
 import com.builtbroken.dtu.content.tool.ToolAction;
 import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
 import net.minecraft.block.Block;
@@ -17,7 +16,7 @@ public class ToolActionMelt extends ToolAction
 {
     public ToolActionMelt()
     {
-        super("tool." + DTUMod.PREFX + "mode.action.melt", ToolUpgrade.MELT);
+        super("melter", ToolUpgrade.MELT);
     }
 
     @Override

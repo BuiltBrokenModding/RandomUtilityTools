@@ -4,17 +4,20 @@ import com.builtbroken.dtu.DTUMod;
 import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,6 +33,9 @@ public class ItemMultiToolGun extends Item
     public static final String NBT_UPGRADES = "toolUpgrades";
 
     private static final int[] EMPTY_INT = new int[0];
+
+    @SideOnly(Side.CLIENT)
+    private HashMap<ToolAction, IIcon> textures = new HashMap();
 
     public ItemMultiToolGun()
     {
@@ -102,25 +108,6 @@ public class ItemMultiToolGun extends Item
         return true;
     }
 
-    protected ToolAction getAction(ItemStack stack)
-    {
-        ToolMode toolMode = getMode(stack);
-        int subMode = getSubMode(stack);
-        int maxModes = getSubModes(stack);
-        if (subMode >= 0 && subMode < maxModes)
-        {
-            if (subMode < toolMode.toolActions.size())
-            {
-                return toolMode.toolActions.get(subMode);
-            }
-        }
-        else if (subMode != 0)
-        {
-            setSubMode(stack, 0);
-        }
-        return null;
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tabs, List list)
@@ -136,6 +123,17 @@ public class ItemMultiToolGun extends Item
         setUpgradeArray(completeItem, upgrades);
 
         list.add(completeItem);
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack stack)
+    {
+        ToolAction action = getAction(stack);
+        if (action != null)
+        {
+            return action.localization;
+        }
+        return super.getUnlocalizedName(stack);
     }
 
     //===============================================
@@ -170,10 +168,10 @@ public class ItemMultiToolGun extends Item
         final ToolMode currentMode = getMode(stack);
 
         //Find next mode that is supported
-        ToolMode nextMode;
+        ToolMode nextMode = currentMode;
         do
         {
-            nextMode = forward ? currentMode.next() : currentMode.prev();
+            nextMode = forward ? nextMode.next() : nextMode.prev();
         }
         while (nextMode != currentMode && !supportsMode(stack, nextMode));
 
@@ -253,6 +251,24 @@ public class ItemMultiToolGun extends Item
         return getMode(stack).toolActions.size();
     }
 
+    protected ToolAction getAction(ItemStack stack)
+    {
+        ToolMode toolMode = getMode(stack);
+        int subMode = getSubMode(stack);
+        int maxModes = getSubModes(stack);
+        if (subMode >= 0 && subMode < maxModes)
+        {
+            if (subMode < toolMode.toolActions.size())
+            {
+                return toolMode.toolActions.get(subMode);
+            }
+        }
+        else if (subMode != 0)
+        {
+            setSubMode(stack, 0);
+        }
+        return null;
+    }
     //</editor-fold>
 
     //<editor-fold desc="data upgrades">
@@ -351,4 +367,56 @@ public class ItemMultiToolGun extends Item
         //Ray trace
         return world.func_147447_a(start, end, traceWater, !traceWater, false);
     }
+
+    //<editor-fold desc="icons">
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(ItemStack stack, int pass)
+    {
+        ToolAction action = getAction(stack);
+        if (action != null)
+        {
+            String textureName = action.getIconName(getIconString());
+            if (textureName != null)
+            {
+                return textures.get(textureName);
+            }
+        }
+        return itemIcon;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister reg)
+    {
+        this.itemIcon = reg.registerIcon(this.getIconString());
+
+        for (ToolMode mode : ToolMode.values())
+        {
+            for (ToolAction action : mode.toolActions)
+            {
+                String textureName = action.getIconName(getIconString());
+                if (textureName != null)
+                {
+                    textures.put(action, reg.registerIcon(textureName));
+                }
+            }
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean requiresMultipleRenderPasses()
+    {
+        return true;
+    }
+
+    @Override
+    public int getRenderPasses(int metadata)
+    {
+        return 1;
+    }
+
+    //</editor-fold>
 }

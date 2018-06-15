@@ -71,6 +71,10 @@ public class DTUMod
         //Register items
         GameRegistry.registerItem(itemMultiToolGun = new ItemMultiToolGun(), "multiToolGun");
 
+        //Register tool modes
+        ToolMode.MELT.toolActions.add(new ToolActionMelt());
+        ToolMode.FREEZE.toolActions.add(new ToolActionFreeze());
+
         sideProxy.preInit();
     }
 
@@ -78,9 +82,6 @@ public class DTUMod
     public void init(FMLInitializationEvent evt)
     {
         PacketSystem.INSTANCE.init();
-
-        ToolMode.MELT.toolActions.add(new ToolActionMelt());
-        ToolMode.FREEZE.toolActions.add(new ToolActionFreeze());
     }
 
     @Mod.EventHandler

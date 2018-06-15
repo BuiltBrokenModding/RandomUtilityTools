@@ -1,5 +1,6 @@
 package com.builtbroken.dtu.content.tool;
 
+import com.builtbroken.dtu.DTUMod;
 import com.builtbroken.dtu.content.tool.actions.ActionResult;
 import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,12 +13,14 @@ import net.minecraft.world.World;
  */
 public class ToolAction
 {
+    public final String name;
     public final String localization;
     public final ToolUpgrade upgradeRequired;
 
-    public ToolAction(String localization, ToolUpgrade upgradeRequired)
+    public ToolAction(String name, ToolUpgrade upgradeRequired)
     {
-        this.localization = localization;
+        this.name = name;
+        this.localization = DTUMod.itemMultiToolGun.getUnlocalizedName() + "." + name;
         this.upgradeRequired = upgradeRequired;
     }
 
@@ -87,5 +90,10 @@ public class ToolAction
     public ActionResult onHitBlock(EntityPlayer player, ItemStack tool, World world, int x, int y, int z, int side)
     {
         return ActionResult.PASS;
+    }
+
+    public String getIconName(String iconName)
+    {
+        return iconName + "." + name;
     }
 }

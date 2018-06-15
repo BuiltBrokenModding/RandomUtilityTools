@@ -1,0 +1,8 @@
+itemGroup.darktoolandutilities=Dark's Tools and Utilities
+
+## Items
+item.darktoolandutilities:multiTool.name=Utility Gun
+
+item.darktoolandutilities:multiTool.freezer.name=Freeze Gun
+
+item.darktoolandutilities:multiTool.melter.name=Melter Gun

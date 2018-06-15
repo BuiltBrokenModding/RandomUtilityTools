@@ -1,6 +1,5 @@
 package com.builtbroken.dtu.content.tool.actions;
 
-import com.builtbroken.dtu.DTUMod;
 import com.builtbroken.dtu.content.tool.ToolAction;
 import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
 import net.minecraft.block.Block;
@@ -17,7 +16,7 @@ public class ToolActionFreeze extends ToolAction
 {
     public ToolActionFreeze()
     {
-        super("tool." + DTUMod.PREFX + "mode.action.freeze", ToolUpgrade.FREEZE);
+        super("freezer", ToolUpgrade.FREEZE);
     }
 
     @Override
