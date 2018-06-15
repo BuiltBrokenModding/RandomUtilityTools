@@ -2,10 +2,20 @@ package com.builtbroken.dtu.content.tool;
 
 import com.builtbroken.dtu.DTUMod;
 import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Upgrade-able gun that can support several tool types
@@ -25,7 +35,107 @@ public class ItemMultiToolGun extends Item
     {
         setCreativeTab(DTUMod.creativeTab);
         setUnlocalizedName(DTUMod.PREFX + "multiTool");
-        setTextureName(DTUMod.PREFX + "multiTool/multiTool");
+        setTextureName(DTUMod.PREFX + "multitool/multitool");
+        setMaxStackSize(1);
+        setHasSubtypes(true);
+        canRepair = false;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, EntityPlayer player, List lines, boolean p_77624_4_)
+    {
+        ToolMode mode = getMode(stack);
+        ToolAction action = getAction(stack);
+
+        lines.add("Mode: " + mode.name());
+        lines.add("Action: " + (action != null ? action.localization : "null"));
+    }
+
+    @Override
+    public void onCreated(ItemStack p_77622_1_, World p_77622_2_, EntityPlayer p_77622_3_)
+    {
+        //TODO save owner ID
+    }
+
+    @Override
+    public int getMaxItemUseDuration(ItemStack p_77626_1_)
+    {
+        return 0;
+    }
+
+    @Override //TODO implement charge mechanic
+    public void onPlayerStoppedUsing(ItemStack p_77615_1_, World p_77615_2_, EntityPlayer p_77615_3_, int p_77615_4_)
+    {
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+    {
+        if (!world.isRemote)
+        {
+            ToolAction action = getAction(stack);
+            if (action != null)
+            {
+                int range = action.getRange(player, stack);
+                MovingObjectPosition rayHit = traceBlocks(world, player, range, action.rayFluids());
+                if (rayHit != null && rayHit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+                {
+                    action.onHitBlock(player, stack, world, rayHit.blockX, rayHit.blockY, rayHit.blockZ, rayHit.sideHit);
+                }
+            }
+        }
+        return stack;
+    }
+
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xHit, float yHit, float zHit)
+    {
+        if (!world.isRemote)
+        {
+            ToolAction action = getAction(stack);
+            if (action != null)
+            {
+                action.onHitBlock(player, stack, world, x, y, z, side);
+            }
+        }
+        return true;
+    }
+
+    protected ToolAction getAction(ItemStack stack)
+    {
+        ToolMode toolMode = getMode(stack);
+        int subMode = getSubMode(stack);
+        int maxModes = getSubModes(stack);
+        if (subMode >= 0 && subMode < maxModes)
+        {
+            if (subMode < toolMode.toolActions.size())
+            {
+                return toolMode.toolActions.get(subMode);
+            }
+        }
+        else if (subMode != 0)
+        {
+            setSubMode(stack, 0);
+        }
+        return null;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubItems(Item item, CreativeTabs tabs, List list)
+    {
+        ItemStack completeItem = new ItemStack(item, 1, 0);
+
+        int[] upgrades = new int[ToolUpgrade.values().length];
+        for (ToolUpgrade upgrade : ToolUpgrade.values())
+        {
+            upgrades[upgrade.ordinal()] = upgrade.ordinal();
+        }
+
+        setUpgradeArray(completeItem, upgrades);
+
+        list.add(completeItem);
     }
 
     //===============================================
@@ -33,6 +143,7 @@ public class ItemMultiToolGun extends Item
     //===============================================
 
     //<editor-fold desc="data actions">
+
     /**
      * Called to handle mouse wheel movement
      *
@@ -154,6 +265,32 @@ public class ItemMultiToolGun extends Item
         return EMPTY_INT;
     }
 
+    public void setUpgradeArray(ItemStack stack, int[] upgrades)
+    {
+        if (stack.getTagCompound() == null)
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        stack.getTagCompound().setIntArray(NBT_UPGRADES, upgrades);
+    }
+
+    public void addUpgrade(ItemStack stack, ToolUpgrade upgrade)
+    {
+        if (stack.getTagCompound() == null)
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        //Get array and expand
+        int[] upgrades = getUpgradeArray(stack);
+        upgrades = Arrays.copyOf(upgrades, upgrades.length + 1);
+
+        //Add upgrade to end
+        upgrades[upgrades.length - 1] = upgrade.ordinal();
+
+        //Sort so upgrades are in order
+        Arrays.sort(upgrades);
+    }
+
     public boolean supportsMode(ItemStack stack, ToolMode mode)
     {
         if (mode.upgrades == null)
@@ -186,4 +323,32 @@ public class ItemMultiToolGun extends Item
         return false;
     }
     //</editor-fold>
+
+    protected MovingObjectPosition traceBlocks(World world, EntityPlayer player, double distance, boolean traceWater)
+    {
+        //Rotation
+        float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch);
+        float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw);
+
+        //Position
+        double px = player.prevPosX + (player.posX - player.prevPosX);
+        double py = player.prevPosY + (player.posY - player.prevPosY)
+                + (double) (world.isRemote ? player.getEyeHeight() - player.getDefaultEyeHeight() : player.getEyeHeight());
+        double pz = player.prevPosZ + (player.posZ - player.prevPosZ);
+
+        //Convert rotation into a vector
+        float f3 = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float f4 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+        float f5 = -MathHelper.cos(-pitch * 0.017453292F);
+        float vy = MathHelper.sin(-pitch * 0.017453292F);
+        float vx = f4 * f5;
+        float vz = f3 * f5;
+
+        //Generate start and end of ray
+        Vec3 start = Vec3.createVectorHelper(px, py, pz);
+        Vec3 end = start.addVector((double) vx * distance, (double) vy * distance, (double) vz * distance);
+
+        //Ray trace
+        return world.func_147447_a(start, end, traceWater, !traceWater, false);
+    }
 }

@@ -1,6 +1,9 @@
 package com.builtbroken.dtu;
 
 import com.builtbroken.dtu.content.tool.ItemMultiToolGun;
+import com.builtbroken.dtu.content.tool.ToolMode;
+import com.builtbroken.dtu.content.tool.actions.ToolActionFreeze;
+import com.builtbroken.dtu.content.tool.actions.ToolActionMelt;
 import com.builtbroken.dtu.network.netty.PacketSystem;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -75,6 +78,9 @@ public class DTUMod
     public void init(FMLInitializationEvent evt)
     {
         PacketSystem.INSTANCE.init();
+
+        ToolMode.MELT.toolActions.add(new ToolActionMelt());
+        ToolMode.FREEZE.toolActions.add(new ToolActionFreeze());
     }
 
     @Mod.EventHandler
