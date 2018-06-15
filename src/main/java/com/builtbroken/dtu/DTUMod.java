@@ -2,8 +2,11 @@ package com.builtbroken.dtu;
 
 import com.builtbroken.dtu.content.tool.ItemMultiToolGun;
 import com.builtbroken.dtu.content.tool.ToolMode;
+import com.builtbroken.dtu.content.tool.actions.ToolActionFluidDelete;
+import com.builtbroken.dtu.content.tool.actions.ToolActionFluidRemove;
 import com.builtbroken.dtu.content.tool.actions.ToolActionFreeze;
 import com.builtbroken.dtu.content.tool.actions.ToolActionMelt;
+import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
 import com.builtbroken.dtu.network.netty.PacketSystem;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -74,6 +77,10 @@ public class DTUMod
         //Register tool modes
         ToolMode.MELT.toolActions.add(new ToolActionMelt());
         ToolMode.FREEZE.toolActions.add(new ToolActionFreeze());
+
+        ToolMode.FLUID.toolActions.add(new ToolActionFluidRemove("fluid.vac", ToolUpgrade.FLUID_VAC, true));
+        ToolMode.FLUID.toolActions.add(new ToolActionFluidRemove("fluid.drain", ToolUpgrade.FLUID_DRAIN, false));
+        ToolMode.FLUID.toolActions.add(new ToolActionFluidDelete());
 
         sideProxy.preInit();
     }

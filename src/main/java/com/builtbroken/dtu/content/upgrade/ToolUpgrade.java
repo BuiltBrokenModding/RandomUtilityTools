@@ -10,5 +10,6 @@ public enum ToolUpgrade
     MELT,
     FLUID_VAC,
     FLUID_PLACE,
+    FLUID_DRAIN,
     FLUID_DELETE;
 }
