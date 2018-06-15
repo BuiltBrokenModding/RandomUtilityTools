@@ -1,7 +1,6 @@
-package com.builtbroken.dtu.content.tool;
+package com.builtbroken.dtu.content.tool.actions;
 
 import com.builtbroken.dtu.DTUMod;
-import com.builtbroken.dtu.content.tool.actions.ActionResult;
 import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,14 +12,18 @@ import net.minecraft.world.World;
  */
 public class ToolAction
 {
-    public final String name;
-    public final String localization;
-    public final ToolUpgrade upgradeRequired;
+    private final String name;
+    private final String itemLocalKey;
+    private final String toolTipLocalKey;
+    private final String toolTipLocalInfo;
+    private final ToolUpgrade upgradeRequired;
 
     public ToolAction(String name, ToolUpgrade upgradeRequired)
     {
         this.name = name;
-        this.localization = DTUMod.itemMultiToolGun.getUnlocalizedName() + "." + name;
+        this.itemLocalKey = DTUMod.itemMultiToolGun.getUnlocalizedName() + "." + name;
+        this.toolTipLocalKey = DTUMod.itemMultiToolGun.getUnlocalizedName() + ".action." + name + ".name";
+        this.toolTipLocalInfo = DTUMod.itemMultiToolGun.getUnlocalizedName() + ".action." + name + ".info";
         this.upgradeRequired = upgradeRequired;
     }
 
@@ -94,6 +97,31 @@ public class ToolAction
 
     public String getIconName(String iconName)
     {
-        return iconName + "." + name;
+        return iconName + "." + getName();
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getItemName()
+    {
+        return itemLocalKey;
+    }
+
+    public String getToolTipName()
+    {
+        return toolTipLocalKey;
+    }
+
+    public String getToolTipInfo()
+    {
+        return toolTipLocalInfo;
+    }
+
+    public ToolUpgrade getUpgradeRequired()
+    {
+        return upgradeRequired;
     }
 }

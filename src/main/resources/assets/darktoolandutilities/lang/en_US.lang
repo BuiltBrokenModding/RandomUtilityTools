@@ -1,8 +1,47 @@
 itemGroup.darktoolandutilities=Dark's Tools and Utilities
 
-## Items
+## Tool Names
 item.darktoolandutilities:multiTool.name=Utility Gun
 
 item.darktoolandutilities:multiTool.freezer.name=Freeze Gun
-
 item.darktoolandutilities:multiTool.melter.name=Melter Gun
+item.darktoolandutilities:multiTool.fluid.vac.name=Fluid Vac Gun
+item.darktoolandutilities:multiTool.fluid.drain.name=Fluid Drain Gun
+item.darktoolandutilities:multiTool.fluid.remover.name=Fluid Ender Gun
+
+## Mode Tool Names - most are backups in case actions are disabled or removed
+item.darktoolandutilities:multiTool.off.name=Disabled Utility Gun
+item.darktoolandutilities:multiTool.freeze.name=Freeze Gun
+item.darktoolandutilities:multiTool.melt.name=Melt Gun
+item.darktoolandutilities:multiTool.fluid.name=Fluid Gun
+
+## Tool Modes
+item.darktoolandutilities:multiTool.mode.fluid=Mode: §1Fluid
+item.darktoolandutilities:multiTool.mode.melt=Mode: §4Melt
+item.darktoolandutilities:multiTool.mode.freeze=Mode: §3Freeze
+
+item.darktoolandutilities:multiTool.off.info=§bDisabled switch mode to enable
+
+## Tool Tip Names
+item.darktoolandutilities:multiTool.action.none=§4No modes installed for tool
+
+item.darktoolandutilities:multiTool.action.melter.name=Action: Block Melter
+item.darktoolandutilities:multiTool.action.melter.info=§bInfo:§r Smelts blocks in world
+
+item.darktoolandutilities:multiTool.action.freezer.name=Action: Block Freezer
+item.darktoolandutilities:multiTool.action.freezer.info=§bInfo:§r Freezes blocks
+
+item.darktoolandutilities:multiTool.action.fluid.remover.name=Action: Fluid Remover
+item.darktoolandutilities:multiTool.action.fluid.remover.info=§bInfo:§r Sends fluid tiles to the void
+
+item.darktoolandutilities:multiTool.action.fluid.vac.name=Action: Fluid Vac
+item.darktoolandutilities:multiTool.action.fluid.vac.info=§bInfo:§r Drains fluid tiles
+
+item.darktoolandutilities:multiTool.action.fluid.drain.name=Action: Fluid Drainer
+item.darktoolandutilities:multiTool.action.fluid.drain.info=§bInfo:§r Drains fluid tiles without triggering updates
+
+## Tool Usage
+item.darktoolandutilities:multiTool.more.info=Hold §bSHIFT§r for more
+item.darktoolandutilities:multiTool.info=§bTool Usage:
+item.darktoolandutilities:multiTool.wheel.info=Mouse wheel switches mode
+item.darktoolandutilities:multiTool.ctrl.info=Ctrl + wheel switches tool

@@ -1,5 +1,6 @@
 package com.builtbroken.dtu.content.tool;
 
+import com.builtbroken.dtu.content.tool.actions.ToolAction;
 import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
 
 import java.util.ArrayList;

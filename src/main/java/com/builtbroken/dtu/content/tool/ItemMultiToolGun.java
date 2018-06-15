@@ -1,19 +1,18 @@
 package com.builtbroken.dtu.content.tool;
 
 import com.builtbroken.dtu.DTUMod;
+import com.builtbroken.dtu.content.tool.actions.ToolAction;
 import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
@@ -54,8 +53,38 @@ public class ItemMultiToolGun extends Item
         ToolMode mode = getMode(stack);
         ToolAction action = getAction(stack);
 
-        lines.add("Mode: " + mode.name());
-        lines.add("Action: " + (action != null ? action.localization : "null"));
+        if(mode == ToolMode.OFF)
+        {
+            lines.add(StatCollector.translateToLocal(getUnlocalizedName() + ".off.info"));
+        }
+        else
+        {
+            lines.add(StatCollector.translateToLocal(getUnlocalizedName() + ".mode." + mode.name().toLowerCase()));
+            if (action != null)
+            {
+                lines.add(StatCollector.translateToLocal(action.getToolTipName()));
+            }
+            else
+            {
+                lines.add(StatCollector.translateToLocal(getUnlocalizedName() + ".action.none"));
+            }
+        }
+
+        if (GuiScreen.isShiftKeyDown())
+        {
+            if (action != null)
+            {
+                lines.add(StatCollector.translateToLocal(action.getToolTipInfo()));
+            }
+
+            lines.add(StatCollector.translateToLocal(getUnlocalizedName() + ".info"));
+            lines.add(StatCollector.translateToLocal(getUnlocalizedName() + ".wheel.info"));
+            lines.add(StatCollector.translateToLocal(getUnlocalizedName() + ".ctrl.info"));
+        }
+        else
+        {
+            lines.add(StatCollector.translateToLocal(getUnlocalizedName() + ".more.info"));
+        }
     }
 
     @Override
@@ -97,15 +126,8 @@ public class ItemMultiToolGun extends Item
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xHit, float yHit, float zHit)
     {
-        if (!world.isRemote)
-        {
-            ToolAction action = getAction(stack);
-            if (action != null)
-            {
-                action.onHitBlock(player, stack, world, x, y, z, side);
-            }
-        }
-        return true;
+        //All action is done in onItemRightClick to allow raytracing fluids
+        return false; //TODO allow quick draining buckets into tanks
     }
 
     @Override
@@ -131,9 +153,9 @@ public class ItemMultiToolGun extends Item
         ToolAction action = getAction(stack);
         if (action != null)
         {
-            return action.localization;
+            return action.getItemName();
         }
-        return super.getUnlocalizedName(stack);
+        return getUnlocalizedName() + "." + getMode(stack).name().toLowerCase();
     }
 
     //===============================================
@@ -202,7 +224,7 @@ public class ItemMultiToolGun extends Item
                 }
                 action = mode.toolActions.get(nextMode);
             }
-            while (nextMode != subMode && !hasUpgrade(stack, action.upgradeRequired));
+            while (nextMode != subMode && !hasUpgrade(stack, action.getUpgradeRequired()));
 
             setSubMode(stack, nextMode);
         }
@@ -309,7 +331,7 @@ public class ItemMultiToolGun extends Item
 
     public boolean supportsMode(ItemStack stack, ToolMode mode)
     {
-        if (mode.upgrades == null)
+        if (mode.upgrades == null || mode.upgrades.length == 0)
         {
             return true;
         }
