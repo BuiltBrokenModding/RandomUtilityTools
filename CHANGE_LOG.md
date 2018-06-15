@@ -9,7 +9,21 @@ If this is a problem, use exact build numbers to track changes. As each build lo
 
 ### Development Changes
 
-## Init
+## Init 0.1.0
 ### Runtime Changes
+* Added: MultiTool Gun
+* Added: Tool switch mechanic (name, texture, action)
+* Added: Mode switch mechanic (name, texture, action)
+* Added: Melter Tool Mode
+* Added: cobble to stone conversion for melter
+* Added: sand to glass conversion for melter
+* Added: Freezer Tool Mode
+* Added: water to ice conversion
+* Added: Fluid Vec Mode
+* Added: Fluid Remover Mode
+* Added: Fluid Drain Mode
+* Added: Support for water fluid
+* Added: Fluid container fill mechanic
 
 ### Development Changes
+* Created init code and item
