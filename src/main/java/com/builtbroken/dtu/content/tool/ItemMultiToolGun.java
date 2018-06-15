@@ -380,7 +380,11 @@ public class ItemMultiToolGun extends Item
             String textureName = action.getIconName(getIconString());
             if (textureName != null)
             {
-                return textures.get(textureName);
+                IIcon icon = textures.get(action);
+                if (icon != null)
+                {
+                    return icon;
+                }
             }
         }
         return itemIcon;
