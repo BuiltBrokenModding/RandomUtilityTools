@@ -29,11 +29,13 @@ public class ToolActionMelt extends ToolAction
                 if (block == Blocks.cobblestone) //TODO replace with register feed by JSON file
                 {
                     world.setBlock(x, y, z, Blocks.stone);
+                    world.playSoundEffect(x, y, z, "fire.ignite", 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
                     return ActionResult.STOP;
                 }
                 else if (block == Blocks.sand)
                 {
                     world.setBlock(x, y, z, Blocks.glass);
+                    world.playSoundEffect(x, y, z, "fire.ignite", 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
                     return ActionResult.STOP;
                 }
             }

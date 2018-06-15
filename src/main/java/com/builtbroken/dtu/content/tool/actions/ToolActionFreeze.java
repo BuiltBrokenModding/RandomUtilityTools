@@ -28,6 +28,7 @@ public class ToolActionFreeze extends ToolAction
                 Block block = world.getBlock(x, y, z);
                 if (block == Blocks.water) //TODO replace with register feed by JSON file
                 {
+                    world.playSoundEffect(x, y, z, "random.click", 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
                     world.setBlock(x, y, z, Blocks.ice);
                     return ActionResult.STOP;
                 }

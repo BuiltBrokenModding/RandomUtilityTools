@@ -43,6 +43,7 @@ public class ToolActionFluidRemove extends ToolAction
                     {
                         if (world.setBlock(x, y, z, Blocks.air, 0, updateBlock ? 3 : 2))
                         {
+                            world.playSoundEffect(x, y, z, "random.click", 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
                             fillContainerInSlot(player, slot, fluidStack);
                         }
                         return ActionResult.STOP;
