@@ -88,7 +88,7 @@ public class DTUMod
 
         for (int i = 0; i < ItemDye.field_150923_a.length; i++)
         {
-            ToolMode.PAINT.toolActions.add(new ToolActionDye(ItemDye.field_150923_a[i], i));
+            ToolMode.COLOR.toolActions.add(new ToolActionDye(ItemDye.field_150923_a[i], i));
         }
 
         sideProxy.preInit();

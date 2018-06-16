@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -37,6 +38,12 @@ public class ItemMultiToolGun extends Item
     @SideOnly(Side.CLIENT)
     private HashMap<IToolAction, IIcon> textures;
 
+    @SideOnly(Side.CLIENT)
+    private IIcon colorModeTexture;
+
+    @SideOnly(Side.CLIENT)
+    private IIcon colorModeTexture2;
+
     public ItemMultiToolGun()
     {
         setCreativeTab(DTUMod.creativeTab);
@@ -54,7 +61,7 @@ public class ItemMultiToolGun extends Item
         ToolMode mode = getMode(stack);
         IToolAction action = getAction(stack);
 
-        if(mode == ToolMode.OFF)
+        if (mode == ToolMode.OFF)
         {
             lines.add(StatCollector.translateToLocal(getUnlocalizedName() + ".off.info"));
         }
@@ -397,6 +404,16 @@ public class ItemMultiToolGun extends Item
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(ItemStack stack, int pass)
     {
+        ToolMode mode = getMode(stack);
+        if (mode == ToolMode.COLOR)
+        {
+            if (pass == 0)
+            {
+                return colorModeTexture;
+            }
+            return colorModeTexture2;
+        }
+
         IToolAction action = getAction(stack);
         if (action != null)
         {
@@ -415,20 +432,45 @@ public class ItemMultiToolGun extends Item
 
     @Override
     @SideOnly(Side.CLIENT)
+    public int getColorFromItemStack(ItemStack stack, int pass)
+    {
+        if (pass == 1)
+        {
+            ToolMode mode = getMode(stack);
+            if (mode == ToolMode.COLOR)
+            {
+                int color = getSubMode(stack);
+                if (color >= 0 && color < 16)
+                {
+                    return ItemDye.field_150922_c[color];
+                }
+            }
+        }
+        return super.getColorFromItemStack(stack, pass);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister reg)
     {
         textures = new HashMap();
 
         this.itemIcon = reg.registerIcon(this.getIconString());
 
+        this.colorModeTexture = reg.registerIcon(this.getIconString() + ".color");
+        this.colorModeTexture2 = reg.registerIcon(this.getIconString() + ".color.dye");
+
         for (ToolMode mode : ToolMode.values())
         {
-            for (IToolAction action : mode.toolActions)
+            if (mode != ToolMode.COLOR)
             {
-                String textureName = action.getIconName(getIconString());
-                if (textureName != null)
+                for (IToolAction action : mode.toolActions)
                 {
-                    textures.put(action, reg.registerIcon(textureName));
+                    String textureName = action.getIconName(getIconString());
+                    if (textureName != null)
+                    {
+                        textures.put(action, reg.registerIcon(textureName));
+                    }
                 }
             }
         }
@@ -444,7 +486,7 @@ public class ItemMultiToolGun extends Item
     @Override
     public int getRenderPasses(int metadata)
     {
-        return 1;
+        return 2;
     }
 
     //</editor-fold>

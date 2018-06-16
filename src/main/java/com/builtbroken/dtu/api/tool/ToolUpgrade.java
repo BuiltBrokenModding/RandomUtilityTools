@@ -14,5 +14,5 @@ public enum ToolUpgrade //Eventually the enum will be replaced with a registry t
     FLUID_PLACE,
     FLUID_DRAIN,
     FLUID_DELETE,
-    PAINT;
+    COLOR;
 }

@@ -20,7 +20,7 @@ public class ToolActionDye extends ToolAction
 
     public ToolActionDye(String name, int colorIndex)
     {
-        super(name, ToolUpgrade.PAINT);
+        super("color." + name, ToolUpgrade.COLOR);
         this.colorIndex = colorIndex;
     }
 
