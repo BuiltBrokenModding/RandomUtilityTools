@@ -1,13 +1,14 @@
 package com.builtbroken.dtu;
 
 import com.builtbroken.dtu.api.DtuAPI;
-import com.builtbroken.dtu.content.tool.ItemMultiToolGun;
 import com.builtbroken.dtu.api.tool.ToolMode;
+import com.builtbroken.dtu.api.tool.ToolUpgrade;
+import com.builtbroken.dtu.content.tool.ItemMultiToolGun;
+import com.builtbroken.dtu.content.tool.actions.ToolActionDye;
 import com.builtbroken.dtu.content.tool.actions.ToolActionFreeze;
 import com.builtbroken.dtu.content.tool.actions.ToolActionMelt;
 import com.builtbroken.dtu.content.tool.actions.fluid.ToolActionFluidDelete;
 import com.builtbroken.dtu.content.tool.actions.fluid.ToolActionFluidRemove;
-import com.builtbroken.dtu.api.tool.ToolUpgrade;
 import com.builtbroken.dtu.network.netty.PacketSystem;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -19,6 +20,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -83,6 +85,11 @@ public class DTUMod
         ToolMode.FLUID.toolActions.add(new ToolActionFluidRemove("fluid.vac", ToolUpgrade.FLUID_VAC, true));
         ToolMode.FLUID.toolActions.add(new ToolActionFluidRemove("fluid.drain", ToolUpgrade.FLUID_DRAIN, false));
         ToolMode.FLUID.toolActions.add(new ToolActionFluidDelete());
+
+        for (int i = 0; i < ItemDye.field_150923_a.length; i++)
+        {
+            ToolMode.PAINT.toolActions.add(new ToolActionDye(ItemDye.field_150923_a[i], i));
+        }
 
         sideProxy.preInit();
     }
