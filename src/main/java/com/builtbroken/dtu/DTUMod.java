@@ -1,12 +1,13 @@
 package com.builtbroken.dtu;
 
+import com.builtbroken.dtu.api.DtuAPI;
 import com.builtbroken.dtu.content.tool.ItemMultiToolGun;
-import com.builtbroken.dtu.content.tool.ToolMode;
-import com.builtbroken.dtu.content.tool.actions.ToolActionFluidDelete;
-import com.builtbroken.dtu.content.tool.actions.ToolActionFluidRemove;
+import com.builtbroken.dtu.api.tool.ToolMode;
 import com.builtbroken.dtu.content.tool.actions.ToolActionFreeze;
 import com.builtbroken.dtu.content.tool.actions.ToolActionMelt;
-import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
+import com.builtbroken.dtu.content.tool.actions.fluid.ToolActionFluidDelete;
+import com.builtbroken.dtu.content.tool.actions.fluid.ToolActionFluidRemove;
+import com.builtbroken.dtu.api.tool.ToolUpgrade;
 import com.builtbroken.dtu.network.netty.PacketSystem;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -16,6 +17,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,8 +77,8 @@ public class DTUMod
         GameRegistry.registerItem(itemMultiToolGun = new ItemMultiToolGun(), "multiToolGun");
 
         //Register tool modes
-        ToolMode.MELT.toolActions.add(new ToolActionMelt());
-        ToolMode.FREEZE.toolActions.add(new ToolActionFreeze());
+        ToolMode.MELT.toolActions.add(DtuAPI.MELT_BLOCK_ACTION = new ToolActionMelt());
+        ToolMode.FREEZE.toolActions.add(DtuAPI.FREEZE_BLOCK_ACTION = new ToolActionFreeze());
 
         ToolMode.FLUID.toolActions.add(new ToolActionFluidRemove("fluid.vac", ToolUpgrade.FLUID_VAC, true));
         ToolMode.FLUID.toolActions.add(new ToolActionFluidRemove("fluid.drain", ToolUpgrade.FLUID_DRAIN, false));
@@ -89,6 +91,14 @@ public class DTUMod
     public void init(FMLInitializationEvent evt)
     {
         PacketSystem.INSTANCE.init();
+
+        DtuAPI.MELT_BLOCK_ACTION.addConversion(Blocks.cobblestone, Blocks.stone);
+        DtuAPI.MELT_BLOCK_ACTION.addConversion(Blocks.sand, Blocks.glass);
+        DtuAPI.MELT_BLOCK_ACTION.addConversion(Blocks.ice, Blocks.water);
+        DtuAPI.MELT_BLOCK_ACTION.addConversion(Blocks.obsidian, Blocks.lava);
+
+        DtuAPI.FREEZE_BLOCK_ACTION.addConversion(Blocks.lava, Blocks.obsidian);
+        DtuAPI.FREEZE_BLOCK_ACTION.addConversion(Blocks.water, Blocks.ice);
     }
 
     @Mod.EventHandler

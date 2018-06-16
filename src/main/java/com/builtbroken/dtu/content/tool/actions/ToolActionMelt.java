@@ -1,17 +1,14 @@
 package com.builtbroken.dtu.content.tool.actions;
 
-import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
+import com.builtbroken.dtu.content.tool.actions.blocks.ToolActionConvertBlock;
+import com.builtbroken.dtu.api.tool.ToolUpgrade;
 import net.minecraft.world.World;
 
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 6/15/2018.
  */
-public class ToolActionMelt extends ToolAction
+public class ToolActionMelt extends ToolActionConvertBlock
 {
     public ToolActionMelt()
     {
@@ -19,28 +16,8 @@ public class ToolActionMelt extends ToolAction
     }
 
     @Override
-    public ActionResult onHitBlock(EntityPlayer player, ItemStack tool, World world, int x, int y, int z, int side)
+    protected void playEffect(World world, int x, int y, int z)
     {
-        if (!world.isRemote)
-        {
-            if (player.canPlayerEdit(x, y, z, side, tool))
-            {
-                Block block = world.getBlock(x, y, z);
-                if (block == Blocks.cobblestone) //TODO replace with register feed by JSON file
-                {
-                    world.setBlock(x, y, z, Blocks.stone);
-                    world.playSoundEffect(x, y, z, "fire.ignite", 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
-                    return ActionResult.STOP;
-                }
-                else if (block == Blocks.sand)
-                {
-                    world.setBlock(x, y, z, Blocks.glass);
-                    world.playSoundEffect(x, y, z, "fire.ignite", 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
-                    return ActionResult.STOP;
-                }
-            }
-            return ActionResult.NO_RUN;
-        }
-        return ActionResult.CONTINUE;
+        world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "fire.ignite", 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 }

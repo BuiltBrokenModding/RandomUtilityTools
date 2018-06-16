@@ -1,27 +1,25 @@
-package com.builtbroken.dtu.content.tool;
-
-import com.builtbroken.dtu.content.tool.actions.ToolAction;
-import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
+package com.builtbroken.dtu.api.tool;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Major mod groups
+ * Enum of supported tool modes
  *
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 6/14/2018.
  */
-public enum ToolMode
+public enum ToolMode //Eventually the enum will be replaced with a registry to allow add new modes
 {
     //Disable mod, or no upgrades
-    OFF(),
+    OFF,
     FREEZE(ToolUpgrade.FREEZE),
     MELT(ToolUpgrade.MELT),
-    FLUID(ToolUpgrade.FLUID_VAC, ToolUpgrade.FLUID_PLACE, ToolUpgrade.FLUID_DELETE);
+    FLUID(ToolUpgrade.FLUID_VAC, ToolUpgrade.FLUID_PLACE, ToolUpgrade.FLUID_DELETE),
+    PAINT(ToolUpgrade.PAINT);
 
     public final ToolUpgrade[] upgrades;
-    public List<ToolAction> toolActions = new ArrayList();
+    public List<IToolAction> toolActions = new ArrayList();
 
     ToolMode(ToolUpgrade... upgrades)
     {

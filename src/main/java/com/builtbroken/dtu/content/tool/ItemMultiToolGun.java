@@ -1,8 +1,9 @@
 package com.builtbroken.dtu.content.tool;
 
 import com.builtbroken.dtu.DTUMod;
-import com.builtbroken.dtu.content.tool.actions.ToolAction;
-import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
+import com.builtbroken.dtu.api.tool.IToolAction;
+import com.builtbroken.dtu.api.tool.ToolMode;
+import com.builtbroken.dtu.api.tool.ToolUpgrade;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
@@ -34,7 +35,7 @@ public class ItemMultiToolGun extends Item
     private static final int[] EMPTY_INT = new int[0];
 
     @SideOnly(Side.CLIENT)
-    private HashMap<ToolAction, IIcon> textures;
+    private HashMap<IToolAction, IIcon> textures;
 
     public ItemMultiToolGun()
     {
@@ -51,7 +52,7 @@ public class ItemMultiToolGun extends Item
     public void addInformation(ItemStack stack, EntityPlayer player, List lines, boolean p_77624_4_)
     {
         ToolMode mode = getMode(stack);
-        ToolAction action = getAction(stack);
+        IToolAction action = getAction(stack);
 
         if(mode == ToolMode.OFF)
         {
@@ -109,7 +110,7 @@ public class ItemMultiToolGun extends Item
     {
         if (!world.isRemote)
         {
-            ToolAction action = getAction(stack);
+            IToolAction action = getAction(stack);
             if (action != null)
             {
                 int range = action.getRange(player, stack);
@@ -150,7 +151,7 @@ public class ItemMultiToolGun extends Item
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
-        ToolAction action = getAction(stack);
+        IToolAction action = getAction(stack);
         if (action != null)
         {
             return action.getItemName();
@@ -210,7 +211,7 @@ public class ItemMultiToolGun extends Item
         if (max > 0)
         {
             int nextMode = subMode;
-            ToolAction action;
+            IToolAction action;
             do
             {
                 nextMode += forward ? 1 : -1;
@@ -273,7 +274,7 @@ public class ItemMultiToolGun extends Item
         return getMode(stack).toolActions.size();
     }
 
-    protected ToolAction getAction(ItemStack stack)
+    protected IToolAction getAction(ItemStack stack)
     {
         ToolMode toolMode = getMode(stack);
         int subMode = getSubMode(stack);
@@ -396,7 +397,7 @@ public class ItemMultiToolGun extends Item
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(ItemStack stack, int pass)
     {
-        ToolAction action = getAction(stack);
+        IToolAction action = getAction(stack);
         if (action != null)
         {
             String textureName = action.getIconName(getIconString());
@@ -417,12 +418,12 @@ public class ItemMultiToolGun extends Item
     public void registerIcons(IIconRegister reg)
     {
         textures = new HashMap();
-        
+
         this.itemIcon = reg.registerIcon(this.getIconString());
 
         for (ToolMode mode : ToolMode.values())
         {
-            for (ToolAction action : mode.toolActions)
+            for (IToolAction action : mode.toolActions)
             {
                 String textureName = action.getIconName(getIconString());
                 if (textureName != null)

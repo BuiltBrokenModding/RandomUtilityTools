@@ -1,6 +1,8 @@
-package com.builtbroken.dtu.content.tool.actions;
+package com.builtbroken.dtu.content.tool.actions.fluid;
 
-import com.builtbroken.dtu.content.upgrade.ToolUpgrade;
+import com.builtbroken.dtu.content.tool.actions.imp.ActionResult;
+import com.builtbroken.dtu.content.tool.actions.imp.ToolAction;
+import com.builtbroken.dtu.api.tool.ToolUpgrade;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
