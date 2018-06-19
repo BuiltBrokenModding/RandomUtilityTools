@@ -28,6 +28,11 @@ public class ToolActionRemoveBlock extends ToolAction
         super("edit.remove", ToolUpgrade.EDIT_REMOVE_BLOCK);
     }
 
+    public ToolActionRemoveBlock(String name, ToolUpgrade upgrade)
+    {
+        super(name, upgrade);
+    }
+
     @Override
     public ActionResult onHitBlock(EntityPlayer player, ItemStack tool, World world, int x, int y, int z, int side)
     {
@@ -35,11 +40,11 @@ public class ToolActionRemoveBlock extends ToolAction
         {
             if (player.canPlayerEdit(x, y, z, side, tool))
             {
-                TileEntity tile = world.getTileEntity(x, y, z);
-                if (tile == null)
+                if (shouldHarvest(world, player, tool, x, y, z))
                 {
                     if (harvestBlock(world, player, tool, x, y, z))
                     {
+                        onBlockRemoved(world, player, tool, x, y, z);
                         return ActionResult.STOP;
                     }
                 }
@@ -48,6 +53,21 @@ public class ToolActionRemoveBlock extends ToolAction
             return ActionResult.PASS;
         }
         return ActionResult.CONTINUE;
+    }
+
+    protected boolean shouldHarvest(World world, EntityPlayer player, ItemStack tool, int x, int y, int z)
+    {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile == null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    protected void onBlockRemoved(World world, EntityPlayer player, ItemStack tool, int x, int y, int z)
+    {
+
     }
 
     public boolean harvestBlock(World world, EntityPlayer player, ItemStack tool, int x, int y, int z)
@@ -78,6 +98,7 @@ public class ToolActionRemoveBlock extends ToolAction
                         {
                             entityItem.setDead();
                         }
+                        player.inventoryContainer.detectAndSendChanges();
                     }
                 }
                 return true;
@@ -86,11 +107,13 @@ public class ToolActionRemoveBlock extends ToolAction
         return false;
     }
 
+    @Override
     public void onSwitchToMode(ItemStack tool, EntityPlayer player)
     {
         tool.addEnchantment(Enchantment.silkTouch, 1);
     }
 
+    @Override
     public void onSwitchFromMode(ItemStack tool, EntityPlayer player)
     {
         if (tool.getTagCompound() != null)

@@ -8,6 +8,8 @@ item.darktoolandutilities:multiTool.melter.name=Melter Gun
 item.darktoolandutilities:multiTool.fluid.vac.name=Fluid Vac Gun
 item.darktoolandutilities:multiTool.fluid.drain.name=Fluid Drain Gun
 item.darktoolandutilities:multiTool.fluid.remover.name=Fluid Ender Gun
+item.darktoolandutilities:multiTool.edit.replace.name=Block Replacer
+item.darktoolandutilities:multiTool.edit.remove.name=Block Remover
 
 item.darktoolandutilities:multiTool.color.black.name=Black Recolor Gun
 item.darktoolandutilities:multiTool.color.red.name=Red Recolor Gun
@@ -38,6 +40,7 @@ item.darktoolandutilities:multiTool.mode.fluid=Mode: §1Fluid
 item.darktoolandutilities:multiTool.mode.melt=Mode: §4Melt
 item.darktoolandutilities:multiTool.mode.freeze=Mode: §3Freeze
 item.darktoolandutilities:multiTool.mode.color=Mode: §3Color
+item.darktoolandutilities:multiTool.mode.edit=Mode: §3Edit
 
 item.darktoolandutilities:multiTool.off.info=§bDisabled switch mode to enable
 
@@ -58,6 +61,12 @@ item.darktoolandutilities:multiTool.action.fluid.vac.info=§bInfo:§r Drains flu
 
 item.darktoolandutilities:multiTool.action.fluid.drain.name=Action: Fluid Drainer
 item.darktoolandutilities:multiTool.action.fluid.drain.info=§bInfo:§r Drains fluid tiles without triggering updates
+
+item.darktoolandutilities:multiTool.action.edit.replace.name=Action: Block Replacer
+item.darktoolandutilities:multiTool.action.edit.replace.info=§bInfo:§r Replaces target block
+
+item.darktoolandutilities:multiTool.action.edit.remove.name=Action: Block Remover
+item.darktoolandutilities:multiTool.action.edit.remove.info=§bInfo:§r Silk harvests block
 
 item.darktoolandutilities:multiTool.action.color.black.name=Action: Recolor Black
 item.darktoolandutilities:multiTool.action.color.red.name=Action: Recolor Red

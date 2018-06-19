@@ -6,6 +6,7 @@ import com.builtbroken.dtu.api.tool.ToolMode;
 import com.builtbroken.dtu.api.tool.ToolUpgrade;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -165,6 +166,19 @@ public class ItemMultiToolGun extends Item
         }
         return getUnlocalizedName() + "." + getMode(stack).name().toLowerCase();
     }
+
+    @Override
+    public boolean canHarvestBlock(Block par1Block, ItemStack itemStack)
+    {
+        return getMode(itemStack) == ToolMode.EDIT; //Fix block breaking
+    }
+
+    @Override
+    public boolean hasEffect(ItemStack p_77636_1_)
+    {
+        return false; //Disable enchantment glow
+    }
+
 
     //===============================================
     //=======Data Accessors

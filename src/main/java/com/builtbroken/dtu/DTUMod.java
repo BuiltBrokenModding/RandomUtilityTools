@@ -8,6 +8,7 @@ import com.builtbroken.dtu.content.tool.actions.ToolActionDye;
 import com.builtbroken.dtu.content.tool.actions.ToolActionFreeze;
 import com.builtbroken.dtu.content.tool.actions.ToolActionMelt;
 import com.builtbroken.dtu.content.tool.actions.edit.ToolActionRemoveBlock;
+import com.builtbroken.dtu.content.tool.actions.edit.ToolActionReplaceBlock;
 import com.builtbroken.dtu.content.tool.actions.fluid.ToolActionFluidDelete;
 import com.builtbroken.dtu.content.tool.actions.fluid.ToolActionFluidRemove;
 import com.builtbroken.dtu.network.netty.PacketSystem;
@@ -93,6 +94,7 @@ public class DTUMod
         }
 
         ToolMode.EDIT.toolActions.add(new ToolActionRemoveBlock());
+        ToolMode.EDIT.toolActions.add(new ToolActionReplaceBlock());
 
         sideProxy.preInit();
     }
