@@ -182,6 +182,7 @@ public class ItemMultiToolGun extends Item
      */
     public void handleMouseWheelAction(ItemStack stack, EntityPlayer player, boolean ctrl, boolean forward)
     {
+        IToolAction prevAction = getAction(stack);
         if (ctrl)
         {
             toggleMode(stack, forward);
@@ -190,6 +191,18 @@ public class ItemMultiToolGun extends Item
         {
             toggleSubMode(stack, forward);
         }
+
+        IToolAction currentAction = getAction(stack);
+
+        if (prevAction != currentAction)
+        {
+            if (prevAction != null)
+            {
+                prevAction.onSwitchFromMode(stack, player);
+            }
+            currentAction.onSwitchToMode(stack, player);
+        }
+
         player.inventoryContainer.detectAndSendChanges();
     }
 
@@ -207,6 +220,7 @@ public class ItemMultiToolGun extends Item
 
         //Update item
         setMode(stack, nextMode);
+        setSubMode(stack, 0);
     }
 
     public void toggleSubMode(ItemStack stack, boolean forward)

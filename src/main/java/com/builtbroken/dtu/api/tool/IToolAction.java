@@ -88,6 +88,32 @@ public interface IToolAction
     }
 
     /**
+     * Called when the mode is selected
+     * <p>
+     * Use this to apply any data to the tool from the mode
+     *
+     * @param tool
+     * @param player
+     */
+    default void onSwitchToMode(ItemStack tool, EntityPlayer player)
+    {
+
+    }
+
+    /**
+     * Called when the mode is switched to something else
+     * <p>
+     * Use this to cleanup data that was specific to the mode
+     *
+     * @param tool
+     * @param player
+     */
+    default void onSwitchFromMode(ItemStack tool, EntityPlayer player)
+    {
+
+    }
+
+    /**
      * Name of the item, without localization prefixes
      * Example: melter
      *
