@@ -7,6 +7,7 @@ import com.builtbroken.dtu.content.tool.ItemMultiToolGun;
 import com.builtbroken.dtu.content.tool.actions.ToolActionDye;
 import com.builtbroken.dtu.content.tool.actions.ToolActionFreeze;
 import com.builtbroken.dtu.content.tool.actions.ToolActionMelt;
+import com.builtbroken.dtu.content.tool.actions.edit.ToolActionRemoveBlock;
 import com.builtbroken.dtu.content.tool.actions.fluid.ToolActionFluidDelete;
 import com.builtbroken.dtu.content.tool.actions.fluid.ToolActionFluidRemove;
 import com.builtbroken.dtu.network.netty.PacketSystem;
@@ -90,6 +91,8 @@ public class DTUMod
         {
             ToolMode.COLOR.toolActions.add(new ToolActionDye(ItemDye.field_150923_a[i], i));
         }
+
+        ToolMode.EDIT.toolActions.add(new ToolActionRemoveBlock());
 
         sideProxy.preInit();
     }

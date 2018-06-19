@@ -16,7 +16,8 @@ public enum ToolMode //Eventually the enum will be replaced with a registry to a
     FREEZE(ToolUpgrade.FREEZE),
     MELT(ToolUpgrade.MELT),
     FLUID(ToolUpgrade.FLUID_VAC, ToolUpgrade.FLUID_PLACE, ToolUpgrade.FLUID_DELETE),
-    COLOR(ToolUpgrade.COLOR);
+    COLOR(ToolUpgrade.COLOR),
+    EDIT(ToolUpgrade.EDIT);
 
     public final ToolUpgrade[] upgrades;
     public List<IToolAction> toolActions = new ArrayList();
