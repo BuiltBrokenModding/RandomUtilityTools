@@ -1,18 +1,15 @@
 package com.builtbroken.dtu.content.tool.actions.fluid;
 
+import com.builtbroken.dtu.api.tool.ToolUpgrade;
 import com.builtbroken.dtu.content.tool.actions.imp.ActionResult;
 import com.builtbroken.dtu.content.tool.actions.imp.ToolAction;
-import com.builtbroken.dtu.api.tool.ToolUpgrade;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.*;
 
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
@@ -35,10 +32,9 @@ public class ToolActionFluidRemove extends ToolAction
         {
             if (player.canPlayerEdit(x, y, z, side, tool))
             {
-                Block block = world.getBlock(x, y, z);
-                if (block == Blocks.water) //TODO support any fluid
+                final FluidStack fluidStack = getFluid(world, x, y, z);
+                if (fluidStack != null)
                 {
-                    final FluidStack fluidStack = new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME);
                     int slot = getSlotWithEmptyContainer(player, fluidStack);
 
                     if (slot >= 0)
@@ -56,6 +52,25 @@ public class ToolActionFluidRemove extends ToolAction
         }
         return ActionResult.CONTINUE;
     }
+
+    public FluidStack getFluid(World world, int x, int y, int z)
+    {
+        Block block = world.getBlock(x, y, z);
+        if (block == Blocks.water)
+        {
+            return new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME);
+        }
+        else if (block == Blocks.lava)
+        {
+            return new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME);
+        }
+        else if (block instanceof IFluidBlock && ((IFluidBlock) block).canDrain(world, x, y, z))
+        {
+            return ((IFluidBlock) block).drain(world, x, y, z, false);
+        }
+        return null;
+    }
+
 
     public int getSlotWithEmptyContainer(EntityPlayer player, final FluidStack fluidStack)
     {
